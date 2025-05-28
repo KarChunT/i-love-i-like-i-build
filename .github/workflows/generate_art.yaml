@@ -46,7 +46,7 @@ jobs:
           requirements-file: $PROJECT_ROOT_PATH/requirements.txt
 
       - name: Generate Art
-        working-directory: $PROJECT_ROOT_PATH
+        working-directory: project/generative-art
         run: |
           # Set default values for inputs if not provided
           TOTAL=${{ github.event.inputs.total || 1 }}
@@ -69,7 +69,7 @@ jobs:
           eval $CMD
 
       - name: Generate README
-        working-directory: $PROJECT_ROOT_PATH
+        working-directory: project/generative-art
         run: python src/main.py generate-readme
 
       - name: Commit and Push Generated Art
