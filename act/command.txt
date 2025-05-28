@@ -1,0 +1,2 @@
+act -W '.github/workflows/generate_art.yaml' -e act/generate-art-payload.json
+act -W '.github/workflows/delete_art.yaml' -e act/delete-art-payload.json

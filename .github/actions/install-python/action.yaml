@@ -1,0 +1,28 @@
+name: 'Install Python'
+description: 'Install Python package dependencies based on Python version and cache type'
+inputs:
+  python-version:
+    description: 'Python version'
+    required: true
+    default: '3.13'
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    # - name: Cache Python Dependencies
+    #   id: cache-dependencies
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: ~/.cache/pip
+    #     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pip-
+
+    - name: Install Dependencies
+      # if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      shell: bash
+      run: pip install -r requirements.txt

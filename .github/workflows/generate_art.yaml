@@ -1,0 +1,84 @@
+name: Generate Art
+
+on:
+  workflow_dispatch:
+    inputs:
+      singleColor:
+        description: 'Use a single color for the art'
+        required: false
+        default: false
+        type: boolean
+      total:
+        description: 'Total number of images to generate'
+        required: false
+        default: 1
+        type: number
+      usingFormula:
+        description: 'Use custom formulas for generating art'
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    - cron: '0 8 * * 0' # Every Sunday at 8 AM
+
+concurrency:
+  group: "art-group"
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  generate_art:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ROOT_PATH: 'project/generative-art/src/main.py'
+    # container:
+    #   image: python:3.13.3-slim-bullseye # no have git installed
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: ./.github/actions/install-python
+
+      - name: Generate Art
+        run: |
+          # Set default values for inputs if not provided
+          TOTAL=${{ github.event.inputs.total || 1 }}
+          SINGLE_COLOR=${{ github.event.inputs.singleColor || 'false' }}
+          USING_FORMULA=${{ github.event.inputs.usingFormula || 'false' }}
+
+          CMD="python $PROJECT_ROOT_PATH generate-art -t $TOTAL"
+
+          # Add -s flag if singleColor is false
+          if [ "$SINGLE_COLOR" = "true" ]; then
+            CMD="$CMD -s"
+          fi
+          
+          # Add -f flag if usingFormula is false
+          if [ "$USING_FORMULA" = "true" ]; then
+            CMD="$CMD -f"
+          fi
+
+          echo "Running command: $CMD"
+          eval $CMD
+
+      - name: Generate README
+        run: python $PROJECT_ROOT_PATH generate-readme
+
+      - name: Commit and Push Generated Art
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          # Create a new branch based on the run number
+          # BRANCH_NAME="generated-art-run-${{ github.run_number }}"
+          # git checkout -b $BRANCH_NAME
+
+          git pull
+          git add .
+          git commit -m "art: add generated art on $(date)"
+          git push
+          # git push -u origin $BRANCH_NAME
