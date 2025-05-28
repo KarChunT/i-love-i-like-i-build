@@ -20,7 +20,7 @@ jobs:
   delete_art:
     runs-on: ubuntu-latest
     env:
-      PROJECT_ROOT_PATH: 'project/generative-art/src/main.py'
+      PROJECT_ROOT_PATH: 'project/generative-art'
     # container:
     #   image: python:3.13.3-slim-bullseye # no have git installed
     steps:
@@ -29,12 +29,14 @@ jobs:
 
       - name: Set up Python
         uses: ./.github/actions/install-python
+        with:
+          requirements-file: $PROJECT_ROOT_PATH/requirements.txt
 
       - name: Delete Art
         run: |
           # Split the filenames input into an array
           FILENAMES="${{ github.event.inputs.filenames }}"
-          CMD="python $PROJECT_ROOT_PATH delete-art"
+          CMD="python $PROJECT_ROOT_PATH/src/main.py delete-art"
           
           # Loop through each filename and add it as a -f flag
           IFS=',' read -ra FILE_ARRAY <<< "$FILENAMES"
@@ -46,7 +48,7 @@ jobs:
           eval $CMD
 
       - name: Generate README
-        run: python $PROJECT_ROOT_PATH generate-readme
+        run: python $PROJECT_ROOT_PATH/src/main.py generate-readme
 
       - name: Commit and Push Deleted Art
         run: |

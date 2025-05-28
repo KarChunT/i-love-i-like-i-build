@@ -5,6 +5,10 @@ inputs:
     description: 'Python version'
     required: true
     default: '3.13'
+  requirements-file:
+    description: 'Path to the requirements file'
+    required: false
+    default: 'requirements.txt'
 runs:
   using: 'composite'
   steps:
@@ -25,4 +29,4 @@ runs:
     - name: Install Dependencies
       # if: steps.cache-dependencies.outputs.cache-hit != 'true'
       shell: bash
-      run: pip install -r requirements.txt
+      run: pip install -r ${{ inputs.requirements-file }}

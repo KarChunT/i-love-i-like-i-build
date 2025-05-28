@@ -33,7 +33,7 @@ jobs:
   generate_art:
     runs-on: ubuntu-latest
     env:
-      PROJECT_ROOT_PATH: 'project/generative-art/src/main.py'
+      PROJECT_ROOT_PATH: 'project/generative-art'
     # container:
     #   image: python:3.13.3-slim-bullseye # no have git installed
     steps:
@@ -42,6 +42,8 @@ jobs:
 
       - name: Set up Python
         uses: ./.github/actions/install-python
+        with:
+          requirements-file: $PROJECT_ROOT_PATH/requirements.txt
 
       - name: Generate Art
         run: |
@@ -50,7 +52,7 @@ jobs:
           SINGLE_COLOR=${{ github.event.inputs.singleColor || 'false' }}
           USING_FORMULA=${{ github.event.inputs.usingFormula || 'false' }}
 
-          CMD="python $PROJECT_ROOT_PATH generate-art -t $TOTAL"
+          CMD="python $PROJECT_ROOT_PATH/src/main.py generate-art -t $TOTAL"
 
           # Add -s flag if singleColor is false
           if [ "$SINGLE_COLOR" = "true" ]; then
@@ -66,7 +68,7 @@ jobs:
           eval $CMD
 
       - name: Generate README
-        run: python $PROJECT_ROOT_PATH generate-readme
+        run: python $PROJECT_ROOT_PATH/src/main.py generate-readme
 
       - name: Commit and Push Generated Art
         run: |
