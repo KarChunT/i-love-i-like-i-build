@@ -46,13 +46,14 @@ jobs:
           requirements-file: $PROJECT_ROOT_PATH/requirements.txt
 
       - name: Generate Art
+        working-directory: $PROJECT_ROOT_PATH
         run: |
           # Set default values for inputs if not provided
           TOTAL=${{ github.event.inputs.total || 1 }}
           SINGLE_COLOR=${{ github.event.inputs.singleColor || 'false' }}
           USING_FORMULA=${{ github.event.inputs.usingFormula || 'false' }}
 
-          CMD="python $PROJECT_ROOT_PATH/src/main.py generate-art -t $TOTAL"
+          CMD="python src/main.py generate-art -t $TOTAL"
 
           # Add -s flag if singleColor is false
           if [ "$SINGLE_COLOR" = "true" ]; then
@@ -68,7 +69,8 @@ jobs:
           eval $CMD
 
       - name: Generate README
-        run: python $PROJECT_ROOT_PATH/src/main.py generate-readme
+        working-directory: $PROJECT_ROOT_PATH
+        run: python src/main.py generate-readme
 
       - name: Commit and Push Generated Art
         run: |

@@ -33,10 +33,11 @@ jobs:
           requirements-file: $PROJECT_ROOT_PATH/requirements.txt
 
       - name: Delete Art
+        working-directory: $PROJECT_ROOT_PATH
         run: |
           # Split the filenames input into an array
           FILENAMES="${{ github.event.inputs.filenames }}"
-          CMD="python $PROJECT_ROOT_PATH/src/main.py delete-art"
+          CMD="python src/main.py delete-art"
           
           # Loop through each filename and add it as a -f flag
           IFS=',' read -ra FILE_ARRAY <<< "$FILENAMES"
@@ -48,7 +49,8 @@ jobs:
           eval $CMD
 
       - name: Generate README
-        run: python $PROJECT_ROOT_PATH/src/main.py generate-readme
+        working-directory: $PROJECT_ROOT_PATH
+        run: python src/main.py generate-readme
 
       - name: Commit and Push Deleted Art
         run: |
