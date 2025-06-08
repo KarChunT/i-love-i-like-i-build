@@ -1,5 +1,5 @@
 
 <h1 align='center'>Generative Art</h1>
 <div align="center">
-  <img src="output/images/a85a91eb-4be9-49dd-8564-521987ee0292.webp" alt="a85a91eb-4be9-49dd-8564-521987ee0292.webp" width="350">
+  <img src="output/images/d1c3c330-bf2b-40fb-bf28-dfaf7a787384.webp" alt="d1c3c330-bf2b-40fb-bf28-dfaf7a787384.webp" width="350">
 </div>
